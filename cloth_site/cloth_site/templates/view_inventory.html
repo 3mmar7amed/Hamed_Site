@@ -1,0 +1,144 @@
+
+<!--############################################################################################################################################################-->
+<!-- this one is for viewing all products we have
+    LOOK AT view_products in views file     -->
+
+<!--############################################################################################################################################################-->
+{%  include 'nav.html' %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عرض المنتجات</title>
+    <link rel="stylesheet" href="{% static '/style/style.css' %}">
+    <link rel="stylesheet" href="{% static '/style/data_form.css' %}"   >
+     <script src="{% static 'jquery-3.6.0.min.js' %} "></script>
+     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+     <link rel="stylesheet" type="text/css" href="{% static '/DataTables/datatables.min.css' %}">
+ 
+<script type="text/javascript" src="{% static '/DataTables/datatables.min.js' %}"></script>
+
+<script src="{% static 'data.js' %}" ></script>
+
+<style>
+   
+		body{
+		  background: rgb(54,217,182);
+		  background: linear-gradient(90deg, rgba(54,217,182,1) 0%, rgba(32,152,126,1) 43%, rgba(0,212,255,1) 100%);
+		}
+    table{
+        margin-top: 5%;
+        width: 80%;
+        margin-right: 10%;
+        border:2px solid black ;
+    }
+    thead{
+        color: white;
+        background-color: rgb(37, 35, 35);
+    }
+    tr{
+        border:2px solid black;
+    }
+</style>
+</head>
+
+<body>
+<div class="glob-w">
+    <div class="container">
+        <table id="example" class="example">
+        <thead>
+            <tr>
+                <th> البار كود</th>
+                 <th>اسم القطعه</th>
+                <th>سعر البيع</th>
+                <th>سعر الشراء</th>
+                <th>العدد</th>
+                <th>اسم المصنع</th>
+            </tr>
+        </thead>
+        
+        <tbody>
+            
+        </tbody>
+        </table>
+        </div>
+</div>  
+
+
+
+
+<!-- ###################################   
+#######important script to find item ###
+#######from the json by product-id and##
+ returnthe full opject #################    
+########################################     -->
+
+<script>
+    view_data();
+      function view_data(){
+          var wrapper = document.getElementById('list-wrapper')
+          var url = 'http://127.0.0.1:8000/api/viewInventory/'
+
+      fetch(url)
+      .then((resp) => resp.json())
+      .then(function(data){
+          console.log('no data1')
+          console.log('Data:', data)
+       var list = data 
+        for (var i in list ){
+            
+            if (list[i].product_id= "123456"){
+                console.log('no data3')
+         var index =list[i];
+         console.log(index);}
+
+
+          }
+        
+      
+      })
+
+      }
+</script> 
+
+<script>
+          view_ddata();
+            function view_ddata(){
+                var wrapper = document.getElementById('list-wrapper')
+                var url = 'http://127.0.0.1:8000/api/viewInventory/'
+            fetch(url)
+            .then((resp) => resp.json())
+            .then(function(data){
+                console.log('Data:', data)
+             var list = data 
+             
+             $('#example').DataTable( {
+    data: data,
+    columns: [
+        { data: 'product_id' },
+        { data: 'name' },
+        { data: 'sell_price' },
+        { data: 'buy_price' },
+        { data: 'num_of_items' },
+        { data: 'factory_name' } , 
+        
+
+    ]
+} );
+
+            })
+
+            }
+
+
+
+
+
+</script>
+
+</body>
+</html>

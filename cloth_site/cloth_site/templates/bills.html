@@ -1,0 +1,253 @@
+
+<!--############################################################################################################################################################-->
+<!-- this one is for viewing all products we have
+    LOOK AT view_products in views file     -->
+
+<!--############################################################################################################################################################-->
+{%  include 'nav.html' %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static '/style/style.css' %}">
+    <link rel="stylesheet" href="{% static '/style/data_form.css' %}"   >
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+     <script src="{% static 'jquery-3.6.0.min.js' %} "></script>
+     <link rel="stylesheet" type="text/css" href="{% static '/DataTables/datatables.min.css' %}">
+ 
+<script type="text/javascript" src="{% static '/DataTables/datatables.min.js' %}"></script>
+
+<script src="{% static 'data.js' %}" ></script>
+<style>
+   
+    body{
+      background: rgb(54,217,182);
+      background: linear-gradient(90deg, rgba(54,217,182,1) 0%, rgba(32,152,126,1) 43%, rgba(0,212,255,1) 100%);
+    }
+table , p{
+    margin: top 20%;
+	width: 80%;
+	margin-right: 10%;
+	border:2px solid black  ;
+    text-align: center;
+}
+thead{
+    color: white;
+    background-color: rgb(37, 35, 35);
+    text-align: center;
+}
+tr{
+    border:2px solid black;
+    text-align: center;
+}
+</style>
+</head>
+<body>
+<br>
+<br>
+
+
+    
+<div class="print" id="info">
+    <table>
+       
+        <thead>
+            <tr style="text-align: center;" >
+                <th></th>
+                <th ><img style="height: 90px;" src="{% static '/img/logo.jpeg' %}" alt="Italian Trulli"></th>
+                <th></th>
+            </tr>
+            
+        </thead>
+    </table>
+    <table>
+        <thead>
+            <tr>
+                    
+                <th>
+                 <th>محل الطيار للطرح </th>
+                </th>
+                 <th style="text-align: center; align-items: center;">
+                    اسم البائع : 
+                     <select style="   border:none;
+                     -webkit-appearance: none;
+                     -moz-appearance: none;
+                     appearance: none;
+                     -ms-appearance: none; 
+                     direction: unset; background-color: unset; border: white 10px solid;
+                     color: white;
+                     text-align: center;
+                     font-size: 16px;
+                     display: inline;
+                      " onchange="this.options[this.selectedIndex].setAttribute('selected','selected');" >
+                        
+                         <option style="color: black;" value="mercedes">احمد </option>
+                         <option style="color: black;" value="audi">طارق </option>
+                       </select>
+                 </th>
+                
+             </tr>
+        </thead>
+    </table>
+
+
+        <table>
+            <thead>
+                
+
+                <tr>
+                    
+                     <th>العنوان : ابراهيم مغازي بجوار بامبينو </th>              
+                     <th>الهاتف: 01095999802</th>                  
+                </tr>
+            </thead>
+        </table>
+        <table> 
+            
+        <thead> 
+            <tr> 
+                <th>  الــــــــكود </th> 
+                    <th>اسم القطــــعه</th> 
+                <th>السعر</th> 
+                <th>العدد</th>
+                
+            </tr> 
+        </thead> 
+        <tbody id="list-wrapper" > 
+
+        </tbody> 
+        </table> 
+
+        <table> 
+        <thead> 
+        <tr> 
+        <th> الــــــمدفوع</th> 
+        <th>البــــــاقي</th> 
+        <th>الخــــــصم</th>
+        </tr> 
+        </thead> 
+        <tbody id="list-wrapper-2" > 
+
+        </tbody> 
+</table> 
+
+</div> 
+<input class="bar-btn" type="button" value="اطبع" onclick="codespeedy()">
+
+
+
+
+<script type="text/javascript">
+        function getCookie(name) {
+		    var cookieValue = null;
+		    if (document.cookie && document.cookie !== '') {
+		        var cookies = document.cookie.split(';');
+		        for (var i = 0; i < cookies.length; i++) {
+		            var cookie = cookies[i].trim();
+		            // Does this cookie string begin with the name we want?
+		            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+		                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+		                break;
+		            }
+					
+		        }
+		    }
+		    return cookieValue;
+		}
+	var csrftoken = getCookie('csrftoken');
+    function codespeedy(){
+        var print_div = document.getElementById("info");
+        var print_area = window.open();
+        print_area.document.write(print_div.innerHTML);
+        print_area.document.close();
+        print_area.focus();
+        print_area.print();
+        print_area.close();
+
+
+            
+            fetch(`http://127.0.0.1:8000/api/DeleteBills/` , {
+                method: 'DELETE' ,
+                headers: { 'Content-Type': 'application/json' ,
+							'X-CSRFToken':csrftoken,
+                         }
+                        
+                        })
+
+    }
+
+  </script>
+
+
+
+
+<script> 
+ view_data(); 
+   function view_data(){ 
+       var wrapper = document.getElementById('list-wrapper') 
+       var url = 'http://127.0.0.1:8000/api/bills/' 
+
+   fetch(url) 
+   .then((resp) => resp.json()) 
+   .then(function(data){ 
+       console.log('Data:', data) 
+    var list = data  
+     for (var i in list ){ 
+         if(list[i].product_id !== null){
+            var item = ` 
+                <th >${list[i].product_id}</th> 
+                <th >${list[i].name}</th> 
+                <th >${list[i].sell_price}</th> 
+                <th >${list[i].numOfItems}</th> 
+                ` 
+                wrapper.innerHTML += item 
+         }
+      
+
+} 
+      
+    
+   }) 
+
+   } 
+</script> 
+
+<script> 
+view_data(); 
+function view_data(){ 
+var wrapper = document.getElementById('list-wrapper-2') 
+var url = 'http://127.0.0.1:8000/api/bills/' 
+
+fetch(url) 
+.then((resp) => resp.json()) 
+.then(function(data){ 
+console.log('Data:', data) 
+var list = data  
+for (var i in list ){ 
+    if(list[i].product_id === null){
+        var item = ` 
+<th >${list[i].user_paied}</th> 
+<th >${list[i].the_rest_of_money}</th> 
+<th >${list[i].discounts}</th> 
+
+` 
+wrapper.innerHTML += item 
+    }
+
+
+} 
+
+
+}) 
+
+} 
+</script>
+
+</body>
+
+</html>

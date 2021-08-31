@@ -1,0 +1,79 @@
+
+{%  include 'nav.html' %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>الباركود</title>
+	<script src="{% static '/JsBarcode.all.min.js' %} "></script>
+
+</head>
+<body>
+
+<div class="bar-cont" >
+    <input class="bar-input" type="text" name="barcode" id="barcode">
+    <button class="bar-btn" id="code_gen">كود</button>
+    <div style="display: inline;" id="hello">
+    <svg style="display: none;" id="barcode"></svg>
+    </div>
+    <input class="bar-btn" type="button" value="اطبع" onclick="codespeedy()">
+    <div id="info">
+    </div>
+</div>
+
+
+
+    <script type="text/javascript">
+        
+        function codespeedy(){
+            var print_div = document.getElementById("info");
+            var print_area = window.open();
+            print_area.document.write(print_div.innerHTML);
+            print_area.document.close();
+            print_area.focus();
+            print_area.print();
+            print_area.close();
+    // This is the code print a particular div element
+        }
+      </script>
+<script type="text/javascript" >
+document.getElementById("code_gen").addEventListener('click', function(){
+    var text = document.getElementById("barcode").value;
+    var ttext = text.toString();
+    let divDOM = document.getElementById("info");
+let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+svg.setAttribute('jsbarcode-format', 'auto')
+svg.setAttribute('jsbarcode-value', ttext)
+svg.className.baseVal = "barcode";
+divDOM.appendChild(svg);
+
+console.log(document.querySelector('.barcode'));
+JsBarcode(".barcode").init();
+})
+</script>
+
+
+
+// <script type="text/javascript">
+//     document.getElementById("code_gen").addEventListener('click', function(){
+//             var text = document.getElementById("barcode").value;
+//             let divDOM = document.getElementById("info");
+//             let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+//             svg.setAttribute('jsbarcode-format', 'ean13')
+//             svg.setAttribute('jsbarcode-value', "1234567891023")
+//             svg.className.baseVal = "barcode";
+//             divDOM.appendChild(svg);
+
+//             console.log(document.querySelector('.barcode'));
+//             JsBarcode(".barcode").init();
+//     });z
+
+
+</script>
+</body>
+</html>

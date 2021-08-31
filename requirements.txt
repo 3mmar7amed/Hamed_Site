@@ -1,0 +1,18 @@
+1- insert data 
+2- make parcode for every item 
+3- scan parcode for selling ( he can reduce the price )  
+4- make bills
+5- reports (total - earn  ) 
+6- what remain in the store
+7- search
+
+shecma
+
+table of items 
+(id - name - price - سعر الجملة  - num_of_items )
+
+table of reports 
+
+(week_num - selling_money - earn )
+
+( month_num - selling_money - earn )

@@ -1,0 +1,95 @@
+<!--############################################################-->
+<!-- this one is for viewing all sold products we have
+    LOOK AT view_solds in views file     -->
+
+<!--########################################################-->
+{%  include 'nav.html' %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المبيعات</title>
+    <link rel="stylesheet" href="{% static '/style/style.css' %}">
+    <link rel="stylesheet" href="{% static '/style/data_form.css' %}"   >
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+     <script src="{% static 'jquery-3.6.0.min.js' %} "></script>
+     <link rel="stylesheet" type="text/css" href="{% static '/DataTables/datatables.min.css' %}">
+ 
+<script type="text/javascript" src="{% static '/DataTables/datatables.min.js' %}"></script>
+
+<script src="{% static 'data.js' %}" ></script>
+
+<style>
+    table{
+        margin: top 20%;
+        width: 80%;
+        margin-right: 10%;
+        border:2px solid black ;
+    }
+    thead{
+        color: white;
+        background-color: rgb(37, 35, 35);
+    }
+    tr{
+        border:2px solid black;
+    }
+</style>
+</head>
+
+<body>
+<div class="glob-w">
+    <table id="example" class="example">
+        <thead>
+            <tr>
+                <th> التاريخ</th>
+                
+                <th>الاسم</th>
+                <th>عدد القطع</th>
+                <th>سعر البيع</th>
+                
+        
+            </tr>
+        </thead>
+        
+        <tbody>
+            
+        </tbody>
+        </table>
+</div>
+
+
+<script>
+          view_ddata();
+            function view_ddata(){
+                var wrapper = document.getElementById('list-wrapper')
+                var url = 'http://127.0.0.1:8000/api/view_sold_product/'
+            fetch(url)
+            .then((resp) => resp.json())
+            .then(function(data){
+                console.log('Data:', data)
+             var list = data 
+             $('#example').DataTable( {
+    data: data,
+    columns: [
+        { data: 'sold_date' },
+        { data: "name" },
+        { data: "num_of_items" },
+        { data: "sell_price" },
+        
+    ]
+} );
+
+            })
+
+            }
+
+
+</script>
+
+</body>
+
+</html>
