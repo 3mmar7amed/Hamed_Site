@@ -41,28 +41,42 @@ def insert_products(request):
 
     if request.method == 'POST':
         id = request.POST.get('product_id')
-        name = request.POST.get('name')
+        print(id)
+        item_name = request.POST.get('name')
+        print(item_name)
         sell_price = request.POST.get('sell_price')
         buy_price = request.POST.get('buy_price')
-        sort = request.POST.get('sort')
+        item_sort = request.POST.get('sort')
+        print(item_sort)
         product_count = request.POST.get('num_of_items')
-        bookOrStat = id = request.POST.get('whichPlace')
+        bookOrStat = request.POST.get('whichPlace')
         profit = int(sell_price) - int(buy_price)
+        
         if(bookOrStat == 'book'):
 
             try:
-                IncreaseNumOfbooks(request , name , product_count )
+                already_exsit = books.objects.get(product_id = id)
+                print("iam here")
+                if item_name == '':
+                    already_exsit.num_of_items +=int(product_count)
+                    already_exsit.save()         
+                    messages.success(request, 'تم زيادة عدد البضاعة بنجاح  ')
+                else :
+                    print("iam in else ")
                     
             except:
-                q = books(product_id = id , name = name  ,sell_price = sell_price , buy_price = buy_price , num_of_items = product_count , profit = profit , sort=sort)
+                print("iam here in except")
+                q = books(product_id = id , name = item_name  ,sell_price = sell_price , buy_price = buy_price , num_of_items = product_count , profit = profit , sort=item_sort)
                 q.save()
                 messages.success(request, 'تم إضـافة البضاعة بنجاح  ')
+        
+        
         else :
             try:
-                    IncreaseNumOfStat(request , name , product_count)
+                    IncreaseNumOfStat(request , item_name , product_count)
                     
             except:
-                q = stat(product_id = id , name = name  ,sell_price = sell_price , buy_price = buy_price , num_of_items = product_count , profit = profit , sort=sort)
+                q = stat(product_id = id , name = item_name  ,sell_price = sell_price , buy_price = buy_price , num_of_items = product_count , profit = profit , sort=item_sort)
                 q.save()
                 messages.success(request, 'تم إضـافة البضاعة بنجاح  ')
 
@@ -75,13 +89,16 @@ def insert_products(request):
 
 
 def IncreaseNumOfbooks(request , name , product_count ):
-    already_exsit = books.objects.get(product_id = id)
-    if name == '':
-        already_exsit.num_of_items +=int(product_count)
-        already_exsit.save()         
-        messages.success(request, 'تم زيادة عدد البضاعة بنجاح  ')
-    else:
-        messages.success(request, 'لم يتم اضافة البضاعة ، قد يكون  كود المنتج مكرر ، حاول استخدام كود خاص بكل منتج ')
+    try:
+        already_exsit = books.objects.get(product_id = id)
+        if name == '':
+            already_exsit.num_of_items +=int(product_count)
+            already_exsit.save()         
+            messages.success(request, 'تم زيادة عدد البضاعة بنجاح  ')
+    except:
+        return()
+        
+        
 
 def IncreaseNumOfStat(request , name , product_count ):
     already_exsit = stat.objects.get(product_id = id)
@@ -89,8 +106,7 @@ def IncreaseNumOfStat(request , name , product_count ):
         already_exsit.num_of_items +=int(product_count)
         already_exsit.save()         
         messages.success(request, 'تم زيادة عدد البضاعة بنجاح  ')
-    else:
-        messages.success(request, 'لم يتم اضافة البضاعة ، قد يكون  كود المنتج مكرر ، حاول استخدام كود خاص بكل منتج ')
+    
 
 
 
