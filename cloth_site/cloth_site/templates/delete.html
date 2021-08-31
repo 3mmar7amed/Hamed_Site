@@ -1,0 +1,136 @@
+{%  include 'nav.html' %}
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>مسح</title>
+	<link rel="stylesheet" href="{% static '/style/data_form.css' %}"   >
+	<link rel="stylesheet" href="{% static '/style/style.css' %}">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+	<script src="{% static '/JsBarcode.all.min.js' %} "></script>
+	<script>
+		function printDiv(divName) {
+		 var printContents = document.getElementById(divName).innerHTML;
+		 var originalContents = document.body.innerHTML;
+	
+		 document.body.innerHTML = printContents;
+	
+		 window.print();
+	
+		 document.body.innerHTML = originalContents;
+	}
+	</script>
+</head>
+<style>
+table{
+	margin: top 20%;
+	width: 80%;
+	margin-right: 10%;
+	border:2px solid black ;
+}
+thead{
+	color: white;
+	background-color: rgb(37, 35, 35);
+}
+tr{
+	border:2px solid black;
+}
+</style>
+<body>
+	
+	<div class="container"></div>
+<div class="wrapper ">
+	
+	
+	<div class="title">
+		<p> مسح قطع </p>
+	</div>
+	<div>
+		{%for message in messages%}
+			<p id = "messages">{{message}}</p> 
+        {%endfor%}
+	</div>
+
+
+	<form class="form" id ="form" method="post" >
+	
+		<div class="input_field" >
+			<label>كود القطعه </label>
+			<input name = "product_id" id = "product_id" type="number" class="input"    required> 
+		</div>
+
+		<table>
+
+			<tr>
+				<td><input type="radio"  class = "rb" name = "op" value="shop"  >  مسح من المحل </td>
+			</tr>
+			<tr>
+				<td ><input type="radio" class = "rb" name = "op" value="inventory"  > مسح من المخزن  </td>
+			</tr>
+			
+		</table>
+
+		  
+		<div class="btn">
+			<input id="submit" type="submit"  class="add_btn" value="مســــح">
+		</div>
+	</form>
+</div>
+
+
+
+<script>
+    function getCookie(name) {
+		    var cookieValue = null;
+		    if (document.cookie && document.cookie !== '') {
+		        var cookies = document.cookie.split(';');
+		        for (var i = 0; i < cookies.length; i++) {
+		            var cookie = cookies[i].trim();
+		            // Does this cookie string begin with the name we want?
+		            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+		                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+		                break;
+		            }
+					
+		        }
+		    }
+		    return cookieValue;
+		}
+		var csrftoken = getCookie('csrftoken');
+
+        var form = document.getElementById('form') 
+            
+        form.addEventListener('submit', function(s){
+			s.preventDefault()
+			console.log('Form submitted')
+			var value
+			document.getElementsByName('op').forEach(radio => {
+				if(radio.checked){
+					console.log(radio.value);
+					value = radio.value
+				}
+			}) ;
+
+            var id = document.getElementById('product_id').value
+            fetch(`http://127.0.0.1:8000/api/product-delete/${id}/${value}` , {
+                method: 'DELETE' ,
+                headers: { 'Content-Type': 'application/json' ,
+							'X-CSRFToken':csrftoken,
+                         }
+                        
+                        }  ).then(function(response){
+                            document.getElementById('form').reset()
+
+                        })
+                    })
+</script>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,212 @@
+{%  include 'nav.html' %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المكسب</title>
+    <link rel="stylesheet" href="{% static '/style/style.css' %}">
+    <link rel="stylesheet" href="{% static '/style/data_form.css' %}"   >
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+     <script src="{% static 'jquery-3.6.0.min.js' %} "></script>
+     <link rel="stylesheet" type="text/css" href="{% static '/DataTables/datatables.min.css' %}">
+ 
+<script type="text/javascript" src="{% static '/DataTables/datatables.min.js' %}"></script>
+
+<script src="{% static 'data.js' %}" ></script>
+
+<style>
+    table{
+        margin: top 20%;
+        width: 80%;
+        margin-right: 10%;
+        border:2px solid black ;
+        text-align: center;
+    }
+    thead{
+        color: white;
+        background-color: rgb(37, 35, 35);
+        text-align: center;
+    }
+    tr{
+        border:2px solid black;
+        text-align: center;
+    }
+</style>
+</head>
+
+
+
+
+
+
+
+
+
+
+<script>
+    function printDiv(divName) {
+     var printContents = document.getElementById(divName).innerHTML;
+     var originalContents = document.body.innerHTML;
+
+     document.body.innerHTML = printContents;
+
+     window.print();
+
+     document.body.innerHTML = originalContents;
+}
+</script>
+<body>
+    <div class="glob-w">
+        <div id="printableArea">
+            <div class="container" >
+                <table id="example1" class="example">
+                    <thead>
+                        <tr>
+                            <th> اليـــــوم</th>
+                             <th>الداخــــل</th>
+                             <th>المكســـب بدون المنصرف</th>
+                             <th>المنصـــرف</th>
+    
+                    
+                        </tr>
+                    </thead>
+                    
+                    <tbody>
+                        
+                    </tbody>
+                    </table>
+                    
+             </div>
+      </div>
+      
+    </div>
+
+
+
+    <div class="glob-w">
+    <div id="printableArea">
+        <div class="container" >
+            <table id="example" class="example">
+                <thead>
+                    <tr>
+                        <th> التاريخ</th>
+                         <th>المكسب</th>
+
+                
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    
+                </tbody>
+                </table>
+                
+         </div>
+  </div>
+  
+</div>
+
+<div class="glob-w">
+    <div id="printableArea">
+        <div class="container" >
+            <table id="exp" class="exp">
+                <thead>
+                    <tr>
+                        <th>التاريخ</th>
+                        <th> المصاريف</th>
+                         
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    
+                </tbody>
+                </table>
+                
+         </div>
+  </div>
+  
+</div>
+<script>
+    view_ddata();
+      function view_ddata(){
+          var wrapper = document.getElementById('list-wrapper')
+          var url = 'http://127.0.0.1:8000/api/ShowDialyIncome/'
+      fetch(url)
+      .then((resp) => resp.json())
+      .then(function(data){
+        //   console.log('Data:', data)
+       var list = data 
+       $('#example1').DataTable( {
+data: data,
+columns: [
+  { data: "Date" },
+  { data:"income" },
+  { data:"profit" },
+  { data:"expenses" },
+  
+
+]
+} );
+
+      })
+
+      }
+
+</script>
+  <script>
+    view_ddata();
+      function view_ddata(){
+          var wrapper = document.getElementById('list-wrapper')
+          var url = 'http://127.0.0.1:8000/api/view_profit/'
+      fetch(url)
+      .then((resp) => resp.json())
+      .then(function(data){
+        //   console.log('Data:', data)
+       var list = data 
+       $('#example').DataTable( {
+data: data,
+columns: [
+  { data: "Date" },
+  { data:"profit" }
+
+]
+} );
+
+      })
+
+      }
+
+</script>
+
+<script>
+    view_ddata();
+      function view_ddata(){
+          var wrapper = document.getElementById('list-wrapper')
+          var url = 'http://127.0.0.1:8000/api/create_expenses/'
+      fetch(url)
+      .then((resp) => resp.json())
+      .then(function(data){
+        //   console.log('Data:', data)
+       var list = data 
+       $('#exp').DataTable( {
+data: data,
+columns: [
+  { data:"month_date" },
+  { data: "price" },
+
+]
+} );
+
+      })
+
+      }
+
+</script>
+  <!-- <input type="button" onclick="printDiv('printableArea')" value="print " /> -->
+</body>
+</html>

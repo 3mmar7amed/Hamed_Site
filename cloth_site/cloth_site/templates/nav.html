@@ -1,0 +1,107 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://unpkg.com/jsbarcode@latest/dist/JsBarcode.all.min.js"></script>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static '/style/style.css' %}"   >
+    <link rel="stylesheet" href="{% static '/style/nav.css' %}"   >
+    <link rel="stylesheet" href="{% static '/style/sell.css' %}"   >
+    <link rel="stylesheet" href="{% static '/style/data_form.css' %}"   >
+    
+                <!-- <font> -->
+                  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet"> 
+
+    <title>Document</title>
+  
+    <style>
+
+
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f1f1f1;
+        min-width: 110px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 99;
+      }
+      
+      .dropdown-content a {
+        color: black;
+        
+        text-decoration: none;
+        display: block;
+      }
+      
+      .dropdown-content a:hover {background-color: #ddd;}
+      
+      .dropdown:hover .dropdown-content {display: block;}
+      
+      
+      </style>
+
+
+</head>
+<body>
+  <div class="nav" style="height: 150px;" >
+            
+    <a class="a" href= "{% url 'sell' %}" >بيع</a>
+    <a class="a" href="{% url 'barcode' %}">باركود</a>
+    <a class="a" href="{% url 'view_solds_page' %}">المبيعات</a>
+    <a class="a" href="{% url 'returns_products_page' %}">المرتجع</a>
+    <a class="a" href= "{% url 'TaskList' %}" >استلاف قطعة </a>
+    <a class="a" href="{% url 'expenses' %}"> مصاريف خارجية </a>
+    
+
+
+    {% if request.user.is_staff %}
+    <div class="a dropdown" style="padding-right: 10px;">
+      <a class="a ">اضافه قطعه </a>
+      <div class="dropdown-content">
+        <a  href="{% url 'insert_products' %}">  في المحل</a>
+    <a  href="{% url 'insert_Inventory' %}"> في المخزن</a>
+       
+      </div>
+    </div>
+    <div class="a dropdown">
+      <a class="a ">البضاعة </a>
+      <div class="dropdown-content">
+        <a  href="{% url 'view_Inventory' %}">   في المخزن </a>
+        <a  href="{% url 'view_currrent_product' %}">  في المحل </a>
+        <a  href="{% url 'view_profit_' %}">تقارير</a>
+      </div>
+    </div>
+    <a class="a" href="{% url 'delete_product' %}">مسح بضاعة</a>
+    <a class="a" href= "{% url 'ChangePassword' %}" >تغيير كلمه السر</a>
+    
+    {% endif  %}
+
+
+
+
+    <a  class=" a hello-msg" href="{% url 'logout' %}">تسجيل الخروج</a>
+
+
+    
+<div class="a" style="background-color: black;">
+     
+  <img src="{% static '/img/logo.jpeg' %}" alt="Italian Trulli">
+</div>
+    <div class=" a logo " style="background-color: black; width: 95.27;">
+     الطيار
+    </div>
+   
+  </div>
+  <div style="height: 65px;">
+
+  </div>
+
+  
+</body>
+</html>

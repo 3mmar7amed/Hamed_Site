@@ -1,0 +1,409 @@
+{%  include 'nav.html' %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>sell products</title>
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+	<link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+	<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon"> 
+
+
+	<style type="text/css">
+		body{
+		  background: rgb(54,217,182);
+		  background: linear-gradient(90deg, rgba(54,217,182,1) 0%, rgba(32,152,126,1) 43%, rgba(0,212,255,1) 100%);
+		}
+
+
+		h1, h2, h3, h4, h5, p, span, strike{
+		  font-family: 'Montserrat', sans-serif;
+
+		}
+
+
+		#task-container{
+		  max-width:800px;
+		  margin:0 auto;
+		  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+		  background-color: #fff;
+		  
+		  margin-top:100px;
+		  margin-bottom:100px;
+
+		  justify-content: space-around;
+		  align-items: flex-start;
+
+		}
+
+		#form-wrapper{
+		  position: -webkit-sticky;
+		  position: sticky;
+		  top: 4rem;
+		  border-bottom: 1px solid  #e9e9e9;
+		  background-color: #fff;
+		  box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+ 		  padding:40px;
+		}
+
+		#submit{
+		  background-color: #36d9b6;
+		  border-radius: 0;
+		  border:0;
+		  color: #fff;
+		}
+
+		.flex-wrapper{
+			display: flex;
+		}
+
+		.task-wrapper{
+		  	margin:5px;
+		  	padding: 5px;
+		  	padding:20px;
+		  	cursor: pointer;
+		  	border-bottom: 1px solid  #e9e9e9;
+		  	color: #686868;
+			}
+
+	</style>
+
+</head>
+<body>
+	
+	<div class="container">
+
+		<div id="task-container">
+
+
+			<div id="form-wrapper2">
+				<form id="form">
+					<div class="flex-wrapper">
+						
+						<div style="flex: 6">
+							<input id="pay" class="form-control" type="number" name="pay" placeholder="المدفوع" step="0.01" >
+							<input id="discounts" class="form-control" type="number" name="discounts" placeholder="المخصـــوم" step="0.01" >
+							<output id="changes" name="changes" for="pay discounts "></output>
+						</div>
+
+						
+						<div style="flex: 1">
+							<a href="{% url 'viewBills' %}">
+								<input  href="{% url 'viewBills' %}" id="submit" class="btn" onclick="calculate()" type="submit"  ></input>
+							</a>
+							
+						</div>
+						
+					</div>
+					<div id="top">
+			
+					</div>
+				</form>
+			</div>
+
+
+
+			<div id="form-wrapper">
+				<form id="form1">
+					<div class="flex-wrapper">
+						
+						<div style="flex: 6">
+							<input id="product_id" class="form-control" type="number" name="product_id" placeholder="الكود">
+							<input id="num" class="form-control" type="number" name="num" placeholder="العدد">
+						</div>
+						<div style="flex: 1">
+							<input id="submit" class="btn" type="submit" >
+						</div>
+					</div>
+					
+				</form>
+				
+			
+			</div>
+
+			
+
+			<div id="list-wrapper">
+			
+			</div>
+			<div id="wrapper2">
+
+			</div>
+				
+		</div>
+
+	</div>
+
+	<script type="text/javascript">
+		
+
+		function getCookie(name) {
+		    var cookieValue = null;
+		    if (document.cookie && document.cookie !== '') {
+		        var cookies = document.cookie.split(';');
+		        for (var i = 0; i < cookies.length; i++) {
+		            var cookie = cookies[i].trim();
+		            // Does this cookie string begin with the name we want?
+		            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+		                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+		                break;
+		            }
+					
+		        }
+		    }
+		    return cookieValue;
+		}
+		var csrftoken = getCookie('csrftoken');
+
+		var activeItem = null
+		var list_snapshot = []
+		var  overall_price_before_disc  = 0 
+		var countNow = false
+		var pay = document.getElementById('pay').value; 
+		var discounts = document.getElementById('discounts').value;
+		
+		var changes
+		
+
+		buildList()
+		
+		function calculate(){
+			pay  = 0
+			discounts = 0 
+			changes = 0  
+			var wrapper = document.getElementById('top');
+			wrapper.innerHTML = ''
+			pay = document.getElementById('pay').value;
+			discounts = document.getElementById('discounts').value;
+			if(discounts === ''){
+				discounts = 0 
+			}
+
+			console.log(overall_price_before_disc)
+			
+			var price_after_discount = parseFloat(overall_price_before_disc) - parseFloat(discounts)
+			
+			 
+			changes =  parseFloat(pay) - parseFloat(price_after_discount) 
+			console.log( changes)
+			
+			
+			
+			
+			var item = `
+						<div id="data-row1" class="task-wrapper flex-wrapper">
+							<div style="flex:7">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                        
+								       	<th scope="col"> المطلوب </th>
+										   <th scope="col">المدفوع </th>
+										<th scope="col">الباقي </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                        <td>${price_after_discount}</td>
+										<td>${pay}</td>
+										<td>${changes}</td>
+        
+										
+                                        </tr>
+                                    </tbody>
+                                </table>
+								
+							</div>
+							
+							<div style="flex:1">
+								<button class="btn btn-sm btn-outline-info edit">Edit </button>
+							</div>
+							<div style="flex:1">
+								<button class="btn btn-sm btn-outline-dark delete">-</button>
+							</div>
+						</div>
+					`
+					wrapper.innerHTML += item
+
+					overall_price_before_disc = 0 ;
+					window.location.href="http://127.0.0.1:8000/viewBill/";
+		}
+		
+		function buildList(){
+			var wrapper = document.getElementById('list-wrapper')
+			wrapper.innerHTML = ''
+			var wrapper2 = document.getElementById('wrapper2')
+			wrapper2.innerHTML = ''
+			var numOfItems = document.getElementById('num').value;
+			if(numOfItems === ''){
+				numOfItems = 1
+			}
+
+
+
+			var url = 'http://127.0.0.1:8000/api/view_daily_solds/'
+
+			fetch(url)
+			.then((resp) => resp.json())
+			.then(function(data){
+				console.log('Data:', data)
+
+				var list = data
+				var count = 0 
+				var sell_price = (list[0].sell_price) 
+				if(countNow){
+
+					if (overall_price_before_disc > 0  ){
+						overall_price_before_disc = parseFloat(overall_price_before_disc) + (parseFloat(sell_price) * parseFloat(numOfItems) ) 
+					}
+					else {
+						overall_price_before_disc = (parseFloat(sell_price) * parseFloat(numOfItems)) 
+					}
+
+				}
+				
+				countNow = false
+				
+				console.log(overall_price_before_disc)
+				console.log(num)
+
+					
+				for (var i in list){
+					
+					
+					var item = `
+						<div id="data-row-${i}" class="task-wrapper flex-wrapper">
+							<div style="flex:7">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                        <th scope="col">الاسم</th>
+                                        <th scope="col">السعر</th>
+										<th scope="col">المطلوب حتي الان</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                        <td>${list[i].name}</td>
+                                        <td>${list[i].sell_price}</td>
+										<td>${overall_price_before_disc}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+								
+							</div>
+							
+							
+							<div style="flex:1">
+								<button class="btn btn-sm btn-outline-dark delete">-</button>
+							</div>
+						</div>
+					`
+					wrapper.innerHTML += item
+	
+				}
+					
+			})
+		}
+        var form = document.getElementById('form-wrapper')
+		var topForm = document.getElementById('form-wrapper2')
+
+		form.addEventListener('submit', function(e){
+			countNow = true
+			e.preventDefault()
+			console.log('Form submitted')
+			var url = 'http://127.0.0.1:8000/api/create_sold_product/'
+			var url2 = 'http://127.0.0.1:8000/api/bills/'
+
+            var product_id = document.getElementById('product_id').value
+			var disc = document.getElementById('discounts').value
+			var num = document.getElementById('num').value;
+			if(num === ''){
+				num = 1
+			}
+            console.log(product_id)
+			console.log(num)
+            
+            
+            fetch(url , {
+                method: 'POST' ,
+                headers: { 'Content-Type': 'application/json' ,
+							'X-CSRFToken':csrftoken,
+                         },
+                         body:JSON.stringify({
+							'product_id' : product_id ,
+							'num' : num , 
+							   
+							}),
+                        
+                        }  ).then(function(response){
+                            buildList()
+                            document.getElementById('form1').reset()
+
+                        })
+
+						fetch('http://127.0.0.1:8000/api/bills/' , {
+						method: 'POST' ,
+						headers: { 'Content-Type': 'application/json' ,
+									'X-CSRFToken':csrftoken,
+								},
+								body:JSON.stringify({
+									'product_id' : product_id ,
+									'num' : num
+									
+									}),
+							})
+        })
+
+			topForm.addEventListener('submit', function(s){
+			s.preventDefault()
+			console.log('Form submitted')
+			var url = 'http://127.0.0.1:8000/api/reduce_profit_by_discount/'
+
+			var disc = document.getElementById('discounts').value
+			console.log(disc)
+            
+            fetch(url , {
+                method: 'POST' ,
+                headers: { 'Content-Type': 'application/json' ,
+							'X-CSRFToken':csrftoken,
+                         },
+                         body:JSON.stringify({
+							'discounts' : disc ,
+							   
+							}),
+                        
+                        }  ).then(function(response){
+							buildList()
+                            document.getElementById('form').reset()
+
+                        })
+
+					fetch('http://127.0.0.1:8000/api/bills/' , {
+						method: 'POST' ,
+						headers: { 'Content-Type': 'application/json' ,
+									'X-CSRFToken':csrftoken,
+								},
+								body:JSON.stringify({
+									'product_id' : product_id ,
+									'user_paied' :  pay , 
+									'over_All_price' :  overall_price_before_disc ,
+									'discounts' :  discounts   , 
+									'the_rest_of_money' : changes
+									
+									}),
+							})
+
+
+                    })
+      
+	</script>
+	
+{% endblock content %}
+
+</body>
+</html>

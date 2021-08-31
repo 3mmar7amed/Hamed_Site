@@ -1,0 +1,49 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://unpkg.com/jsbarcode@latest/dist/JsBarcode.all.min.js"></script>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static '/style/style.css' %}"   >
+    <link rel="stylesheet" href="{% static '/style/usernav.css' %}"   >
+    <link rel="stylesheet" href="{% static '/style/sell.css' %}"   >
+    <link rel="stylesheet" href="{% static '/style/data_form.css' %}"   >
+    
+                <!-- <font> -->
+                  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet"> 
+
+    <title>Document</title>
+    
+</head>
+<body>
+  <div class="nav">
+            
+
+    
+   
+    <a href= "{% url 'sell' %}" >بيع</a>
+    
+    <a href="{% url 'view_currrent_product' %}">البضاعة الموجودة</a>
+    <a href="{% url 'barcode' %}">باركود</a>
+    <a href="{% url 'view_solds_page' %}">المبيعات</a>
+    
+<div class="logo-img">
+     
+  <img src="{% static '/img/logo.jpeg' %}" alt="Italian Trulli">
+</div>
+    <div class="logo">
+     الطيار
+    </div>
+   
+  </div>
+ <div style="height: 65px;">
+ </div>
+  
+</body>
+</html>
