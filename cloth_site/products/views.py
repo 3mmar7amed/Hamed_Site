@@ -155,9 +155,16 @@ def solds(request):
         id = request.data.get('product_id')
         num_of_items = request.data.get('num')
         print(num_of_items)
-        product_info = products.objects.get(product_id = id)
-        product_info.num_of_items -= 1
-        product_info.save()
+        product_info = ""
+        try:
+
+            product_info = books.objects.get(product_id = id)
+            product_info.num_of_items -=num_of_items
+            product_info.save()
+        except:
+            product_info = stat.objects.get(product_id = id)
+            product_info.num_of_items -=num_of_items
+            product_info.save()
         Sell_price = (product_info.sell_price * int(num_of_items))
         today = datetime.datetime.now()
         date = today.strftime(("%d-%m-%Y    %H:%M:%S"))
@@ -189,7 +196,6 @@ def calculate_profit(buy_price , sell_price , numOfItems ) :
     today = datetime.datetime.now()
     month = today.month
     year = today.year
-    day = today.day
     date = str(month) +"-"+str(year)
     date_day = today.strftime(("%d-%m-%Y"))
     print(date_day)
