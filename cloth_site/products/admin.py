@@ -1,13 +1,13 @@
-from products.models import products ,sold_products ,Expenses , Profit , products_inTheInVentory , Users,dialyProfit
+from products.models import products ,sold_products ,Expenses , monthly_profit , products_inTheInVentory , Users,dialyProfit,stat,books,dialyIncome
 from django.contrib import admin
 
 admin.site.register(products)
 admin.site.register(sold_products  )
-admin.site.register(Profit )
+admin.site.register(monthly_profit )
 admin.site.register(products_inTheInVentory  )
-admin.site.register(Users  )
-admin.site.register(Expenses  )
-admin.site.register(dialyProfit  )
+admin.site.register(stat  )
+admin.site.register(books  )
+admin.site.register(dialyIncome  )
 
 
 

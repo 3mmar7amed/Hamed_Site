@@ -68,7 +68,8 @@
                         <tr>
                             <th> اليـــــوم</th>
                              <th>الداخــــل</th>
-                             <th>المكســـب بدون المنصرف</th>
+                             <th> مكسب الكتب </th>
+                             <th> مكسب المبيعات </th>
                              <th>المنصـــرف</th>
     
                     
@@ -93,8 +94,9 @@
             <table id="example" class="example">
                 <thead>
                     <tr>
-                        <th> التاريخ</th>
-                         <th>المكسب</th>
+                        <th> الشهـــر</th>
+                         <th>مكسب الكتب</th>
+                         <th>مكسب المبيعات</th>
 
                 
                     </tr>
@@ -116,7 +118,7 @@
             <table id="exp" class="exp">
                 <thead>
                     <tr>
-                        <th>التاريخ</th>
+                        <th>الشهـــر</th>
                         <th> المصاريف</th>
                          
                     </tr>
@@ -146,7 +148,8 @@ data: data,
 columns: [
   { data: "Date" },
   { data:"income" },
-  { data:"profit" },
+  { data:"book_profit" },
+  { data:"stat_profit" },
   { data:"expenses" },
   
 
@@ -172,7 +175,8 @@ columns: [
 data: data,
 columns: [
   { data: "Date" },
-  { data:"profit" }
+  { data:"book_profit" },
+  { data:"stat_profit" },
 
 ]
 } );

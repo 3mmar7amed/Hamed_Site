@@ -49,13 +49,16 @@ class sold_products(models.Model):
     num_of_items = models.DecimalField(max_digits=19, decimal_places=0 , null= True , blank= True )
     price = models.DecimalField(max_digits=19, decimal_places=2 , null= True , blank= True )
     name = models.CharField(max_length=10000 , null= True , blank= True )
+    sort = models.CharField(max_length=10000 , null= True , blank= True )
     sell_price = models.DecimalField(max_digits=19, decimal_places=2 , null= True , blank= True )
 
 
 
-class Profit(models.Model):
-    profit = models.DecimalField(max_digits=19, decimal_places=2 , null= True , blank= True )
+class monthly_profit(models.Model):
+    book_profit = models.DecimalField(max_digits=19, decimal_places=2 , null= True , blank= True )
+    stat_profit = models.DecimalField(max_digits=19, decimal_places=2 , null= True , blank= True )
     Date = models.CharField(default="" , max_length=10)
+
 
 
 
@@ -111,6 +114,7 @@ class dialyProfit(models.Model):
 class dialyIncome(models.Model):
     Date = models.CharField(max_length=1000 ,default="" ,  null= True , blank= True )
     income = models.DecimalField(max_digits=19, decimal_places=2, null= True , blank= True )
-    profit = models.DecimalField(max_digits=19, decimal_places=2, null= True , blank= True ,default=0)
+    book_profit = models.DecimalField(max_digits=19, decimal_places=2, null= True , blank= True ,default=0)
+    stat_profit = models.DecimalField(max_digits=19, decimal_places=2, null= True , blank= True ,default=0)
     expenses =  models.DecimalField(max_digits=19, decimal_places=2, null= True , blank= True )
 

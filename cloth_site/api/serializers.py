@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from products.models import dialyIncome, products ,Expenses,dialyProfit, sold_products  , Profit , Returns_products , bills , customer_note , Expenses_details ,products_inTheInVentory
+from products.models import dialyIncome, products ,Expenses,dialyProfit, sold_products  , monthly_profit , Returns_products , bills , customer_note , Expenses_details ,products_inTheInVentory
 
 from rest_framework import serializers
 from products.models import Task
@@ -30,12 +30,12 @@ class createSolds_serializer(serializers.ModelSerializer):
 
 class viewProfit_serializer(serializers.ModelSerializer):
     class Meta:
-        model = Profit
+        model = monthly_profit
         fields = '__all__'
 
 class addToProfit_serializer(serializers.ModelSerializer):
     class Meta:
-        model = Profit
+        model = monthly_profit
         fields = '__all__'
 
 class viewDailySolds_serializer(serializers.ModelSerializer):

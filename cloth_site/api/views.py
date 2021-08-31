@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from socket import socket
 from django.http import JsonResponse
 from api.serializers import  dialyIncomeSerializer, products_inTheInVentory_serializer, expenses_details_serializer ,  expense_serializer , viewSolds_serializer , note_serializer , TaskSerializer ,bills_serializer,  returns_serializer , viewDailySolds_serializer  , createSolds_serializer , productsSerializer , viewProfit_serializer
-from products.models import dialyIncome, dialyProfit, Expenses , Expenses_details , sold_products , customer_note , products  , Profit , Returns_products , bills , products_inTheInVentory ,Task
+from products.models import dialyIncome, dialyProfit, Expenses , Expenses_details , sold_products , customer_note , products  , monthly_profit , Returns_products , bills , products_inTheInVentory ,Task
 from products.views import solds , returns , Create_customer_note , checkLogin , store_expenses 
 
 
@@ -65,7 +65,7 @@ def view_products(request):
 
 @api_view(('GET',))
 def view_profit(request):
-    all_products = Profit.objects.all()
+    all_products = monthly_profit.objects.all()
 
     JsonData = viewProfit_serializer(all_products, many=True)
     return Response(JsonData.data)
@@ -75,18 +75,18 @@ def view_profit(request):
 def reduce_profit_by_discount(request):
 
     discount = request.data.get('discounts')
-    q = Profit.objects.filter().last()
+    q = monthly_profit.objects.filter().last()
     s = dialyIncome.objects.filter().last()
 
     try:
-        new_profit = q.profit - int(discount)
+        new_profit = q.stat_profit - int(discount)
         s.income -= int(discount)
-        s.profit -= int(discount)
+        s.stat_profit -= int(discount)
         s.save()
 
     except:
-        new_profit = q.profit
-    q.profit = new_profit
+        new_profit = q.stat_profit
+    q.stat_profit = new_profit
     q.save()
     return Response()
 
