@@ -1,5 +1,5 @@
-# cloth-shop-MS
-this is a cloth-shop management system 
+# Book and Stationary shop-MS
+this is a Book and Stationary shop management system 
 
 using django to make this and HTML , CSS , JavaScript and sqlite for DB
 
