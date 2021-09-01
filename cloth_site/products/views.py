@@ -2,7 +2,7 @@ from django.db import reset_queries
 from django.shortcuts import render , redirect
 from django.contrib import messages
 from products.Forms import  sellForm , insertProductForm
-from products.models import products , sold_products , Profit , products_inTheInVentory , Expenses , dialyProfit , dialyIncome,books,stat
+from products.models import products , sold_products , monthly_profit , products_inTheInVentory , Expenses , dialyProfit , dialyIncome,books,stat
 import datetime 
 from .decorator import unauthenticated_user , admin_only
 from django.contrib.auth import authenticate, login, logout 
@@ -151,24 +151,34 @@ def solds(request):
         id = request.data.get('product_id')
         num_of_items = request.data.get('num')
         print(num_of_items)
-        product_info = products.objects.get(product_id = id)
-        product_info.num_of_items -= 1
-        product_info.save()
-        Sell_price = (product_info.sell_price * int(num_of_items))
+        whichplace = ''
+
+        if IsProductInBooks(id) == True :
+            product_info = books.objects.get(product_id = id)
+            product_info.num_of_items -= int(num_of_items)
+            product_info.save()
+            whichplace = "book"
+        else :
+            product_info = stat.objects.get(product_id = id)
+            product_info.num_of_items -= int(num_of_items)
+            product_info.save()
+            whichplace = "stat"
+
         today = datetime.datetime.now()
         date = today.strftime(("%d-%m-%Y    %H:%M:%S"))
         Y_M_D_solds = today.strftime(("%d-%m-%Y"))
-
+        sell_price = product_info.sell_price * int(num_of_items)
         data = {
                     "product_id" : id ,
                     "name" : product_info.name , 
-                    "sell_price" : product_info.sell_price , 
+                    "sell_price" : sell_price , 
                     "sold_date" : date,
                     "year_month_day_solds" : Y_M_D_solds,
                     "num_of_items" : num_of_items,
+                    "sort" : product_info.sort
                 }
-            
-        calculate_profit(product_info.buy_price , product_info.sell_price  ,int(num_of_items) )
+
+        calc_prodfit(product_info.buy_price , product_info.sell_price  ,int(num_of_items) , whichplace)
         
         return data    
             
@@ -176,33 +186,67 @@ def solds(request):
         form = sellForm()
     return render(request, 'sell2.html', {'form': form} )
 
+def IsProductInBooks(id):
+    try:
+        q = books.objects.get(product_id = id)
+        return True
+    except:
+        return False
 
+def calc_prodfit(buy_price , sell_price , numOfItems , whichPlace ):
 
+    
 
-def calculate_profit(buy_price , sell_price , numOfItems ) :
     profit = (sell_price - buy_price) * numOfItems
     all_price = sell_price * numOfItems
     today = datetime.datetime.now()
-    month = today.month
-    year = today.year
-    day = today.day
-    date = str(month) +"-"+str(year)
     date_day = today.strftime(("%d-%m-%Y"))
-    print(date_day)
-    try:
-        q = Profit.objects.get(Date = date)
-        q.profit += profit
-    except:
-        q = Profit(profit = profit , Date = date)
-    try:
-        s = dialyIncome.objects.get(Date = date_day)
-        s.income += all_price
-        s.profit += profit
-    except:
-        s = dialyIncome(Date =date_day  ,income  = all_price , expenses = 0 , profit = profit  )
+    calc_monthlyProfit(profit  , today , whichPlace)
 
-    q.save()
-    s.save()
+    if(whichPlace == "book"):
+
+        try:
+            s = dialyIncome.objects.get(Date = date_day)
+            s.income += all_price
+            s.book_profit += profit
+            s.save()
+        except:
+            s = dialyIncome(Date =date_day  ,income  = all_price , expenses = 0 , book_profit = profit , stat_profit = 0  )
+            s.save()
+    elif(whichPlace == "stat") :
+        try:
+            s = dialyIncome.objects.get(Date = date_day)
+            s.income += all_price
+            s.stat_profit += profit
+            s.save()
+        except:
+            s = dialyIncome(Date =date_day  ,income  = all_price , expenses = 0 , stat_profit = profit , book_profit = 0  )
+            s.save()
+
+
+def calc_monthlyProfit(profit  , today , whichPlace):
+
+    date_month = today.strftime(("%m-%Y"))
+    print(date_month)
+    if(whichPlace == "book"):
+
+        try:
+            s = monthly_profit.objects.get(Date = date_month)
+            s.book_profit += profit
+            s.save()
+        except:
+            s = monthly_profit(Date =date_month   , stat_profit = 0 , book_profit = profit  )
+            s.save()
+    elif(whichPlace == "stat") :
+        try:
+            s = monthly_profit.objects.get(Date = date_month)
+            s.stat_profit += profit
+            s.save()
+        except:
+            s = monthly_profit(Date =date_month   , stat_profit = profit , book_profit = 0  )
+            s.save()
+
+
 
 def returns(id , discount):
 
@@ -213,7 +257,7 @@ def returns(id , discount):
             product_info.num_of_items += 1
             product_info.save()
             profit = product_info.sell_price - product_info.buy_price
-            q = Profit.objects.filter().last()
+            q = monthly_profit.objects.filter().last()
             s = dialyIncome.objects.filter().last()
             s.income -= (product_info.sell_price - discount)
             s.save()

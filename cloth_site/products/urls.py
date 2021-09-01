@@ -10,7 +10,7 @@ urlpatterns = [
     path('solds/' , views.solds , name = "sell") , 
     path('barcode/' , views.barcode , name="barcode") ,
     path('view_profit_/' , views.view_profit , name="view_profit_") ,
-    path ('insertProduct/' , views.insert_products , name= "insertProduct"),
+    path ('insert_products/' , views.insert_products , name= "insert_products"),
     path ('insert_Inventory/' , views.insert_products_inTheInventory , name= "insert_Inventory"),
     path ('view_Inventory/' , views.view_products_inTheInventory , name= "view_Inventory"),
 

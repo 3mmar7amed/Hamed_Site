@@ -92,10 +92,7 @@
 
 						
 						<div style="flex: 1">
-							<a href="{% url 'viewBills' %}">
-								<input  href="{% url 'viewBills' %}" id="submit" class="btn" onclick="calculate()" type="submit"  ></input>
-							</a>
-							
+							<input  id="submit" class="btn" onclick="calculate()" type="submit"  ></input>
 						</div>
 						
 					</div>
@@ -230,7 +227,7 @@
 					wrapper.innerHTML += item
 
 					overall_price_before_disc = 0 ;
-					window.location.href="http://127.0.0.1:8000/viewBill/";
+					
 		}
 		
 		function buildList(){
@@ -258,10 +255,10 @@
 				if(countNow){
 
 					if (overall_price_before_disc > 0  ){
-						overall_price_before_disc = parseFloat(overall_price_before_disc) + (parseFloat(sell_price) * parseFloat(numOfItems) ) 
+						overall_price_before_disc = parseFloat(overall_price_before_disc) + (parseFloat(sell_price)  ) 
 					}
 					else {
-						overall_price_before_disc = (parseFloat(sell_price) * parseFloat(numOfItems)) 
+						overall_price_before_disc = (parseFloat(sell_price) ) 
 					}
 
 				}
@@ -281,7 +278,9 @@
                                 <table class="table table-striped">
                                     <thead>
                                         <tr>
-                                        <th scope="col">الاسم</th>
+                                        <th scope="col">الصنف</th>
+										<th scope="col">النوع</th>
+										<th scope="col">العدد</th>
                                         <th scope="col">السعر</th>
 										<th scope="col">المطلوب حتي الان</th>
                                         </tr>
@@ -289,6 +288,8 @@
                                     <tbody>
                                         <tr>
                                         <td>${list[i].name}</td>
+										<td>${list[i].sort}</td>
+										<td>${list[i].num_of_items}</td>
                                         <td>${list[i].sell_price}</td>
 										<td>${overall_price_before_disc}</td>
                                         </tr>
@@ -317,7 +318,6 @@
 			e.preventDefault()
 			console.log('Form submitted')
 			var url = 'http://127.0.0.1:8000/api/create_sold_product/'
-			var url2 = 'http://127.0.0.1:8000/api/bills/'
 
             var product_id = document.getElementById('product_id').value
 			var disc = document.getElementById('discounts').value
@@ -346,17 +346,6 @@
 
                         })
 
-						fetch('http://127.0.0.1:8000/api/bills/' , {
-						method: 'POST' ,
-						headers: { 'Content-Type': 'application/json' ,
-									'X-CSRFToken':csrftoken,
-								},
-								body:JSON.stringify({
-									'product_id' : product_id ,
-									'num' : num
-									
-									}),
-							})
         })
 
 			topForm.addEventListener('submit', function(s){
@@ -383,20 +372,7 @@
 
                         })
 
-					fetch('http://127.0.0.1:8000/api/bills/' , {
-						method: 'POST' ,
-						headers: { 'Content-Type': 'application/json' ,
-									'X-CSRFToken':csrftoken,
-								},
-								body:JSON.stringify({
-									'product_id' : product_id ,
-									'user_paied' :  pay , 
-									'over_All_price' :  overall_price_before_disc ,
-									'discounts' :  discounts   , 
-									'the_rest_of_money' : changes
-									
-									}),
-							})
+		
 
 
                     })
